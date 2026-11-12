@@ -1,17 +1,121 @@
-# agent-telegram：在 Telegram 里查看和操作 Codex / Claude Code 对话
+# agent-telegram：把 Codex 和 Claude Code 装进口袋
 
 [English](README.md) | **中文**
 
-版本：0.1.0 (2026-11-12)
+版本：0.1.0 (2026-11-13)
 
-在 Windows 电脑上后台运行，把 Codex Desktop 和 Claude Code（桌面 App 的 Code 标签或终端 CLI）每一轮的结果推送到私密 Telegram 群。可以在手机上发送指令、中断 Claude、审批权限、新建会话。
+![agent-telegram：Telegram 里的 Claude Code 权限卡片、Codex 回合结果和提问卡片](images/hero.png)
 
-- 每个对话在群里有自己的话题，例如 `pc1·Codex·论文审稿`。
-- 每轮结束推送状态（✅/❌/⏹）、耗时、脱敏后的最终回复前约 1500 字。点 **全文** 下载完整 `.md` 文件，点 **最近3轮** 看历史。电脑未锁屏且三分钟内动过键盘鼠标时，推送静音。
-- 一轮进行中，模型对你说的话会出现在一条进度消息里，最多每 30 秒更新。模型直接找你（请你做事、提问、审批计划），或者经过十分钟，会另发新消息。你不在电脑前时，找你的消息会响铃。模型私下的思考过程不会推送。
-- 在会话话题里打字，bot 会先复述接收方和内容，点 **发送** 才真正发出。
-- 支持一台或多台电脑：每台用自己的 bot，全部加入同一个群。`/list` 等命令由每台 bot 回答本机情况。超过两台时设置 `expected_bots`。
-- 独立版默认 **英文界面**；可选的 **Antigravity、Pi、DSH 读取器默认关闭**。
+agent-telegram 在 Windows 电脑上后台运行，把 Codex Desktop 和 Claude Code（桌面 App 的 Code 标签或终端 CLI）接到一个私密 Telegram 群。每一轮的结果都会推到手机上。你可以在手机上回答 Claude 的权限请求、提问和计划，审批 Codex 的命令，发下一条指令，或者中断当前回合，不用回到电脑前。
+
+- **每个对话一个话题**，命名为 `机器·代理·标题`，例如 `laptop·Claude·Refactor upload client`。
+- **每轮结束都推送**：状态（✅/❌/⏹）、耗时、脱敏后的最终回复前约 1500 字，以及剩余套餐额度。点 **📄 全文** 看完整回复，点 **🕘 最近3轮** 看历史。
+- **等待时也能看进度**：一轮进行中，模型对你说的话会出现在一条进度消息里，最多每 30 秒更新。模型私下的思考过程不会推送。
+- **审批、提问和计划** 以带按钮的卡片送达。卡片和电脑上的对话框同时可用，先回答的生效。
+- **在手机上回复**：在话题里打字，bot 会先复述接收方和内容，确认后才发出。
+- **在电脑前时保持安静**：电脑未锁屏且三分钟内动过键盘鼠标时，推送静音；你离开后，需要你处理的消息会响铃。
+- **多台电脑，一个群**：每台电脑用自己的 bot，`/list`、`/status`、`/lang` 由每台 bot 各自回答。
+- **中英文界面**，在 Telegram 里用 `/lang` 切换。
+- 可选的 Antigravity、Pi、DSH（DeepSeek Harness）只读读取器，**默认关闭**。
+
+## 效果演示
+
+下面的截图都来自桥本身：用演示用的 Claude Code 和 Codex 会话驱动真实的桥代码，每条消息、按钮、编辑和提示都和它实际发出的完全一致，只有会话标题、命令和回答是虚构的。截图使用英文界面；切换到中文后，按钮和提示会显示为括号里的中文。
+
+### Claude Code
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**审批工具调用。** 权限请求变成一张卡片，列出工具、目录、模式和完整输入。**✅ Allow**（允许）仅允许本次，**⛔ Deny**（拒绝）拒绝，**💻 Handle on the PC**（交给电脑处理）转回电脑上的对话框，**⚡ Allow all (this session)**（全部允许（本会话））需要再点一次确认。
+
+<img src="images/claude-permission.gif" width="360" alt="Claude Code 权限卡片：点允许">
+
+</td>
+<td width="50%" valign="top">
+
+**回答提问。** Claude 向你提问时，点选项或回复卡片写自己的答案，核对汇总后点 **📨 Send answers**（发送答案）。
+
+<img src="images/claude-question.gif" width="360" alt="Claude Code 提问卡片：选择选项并发送答案">
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**批准计划。** 等待批准的计划完整送达。**✅ Approve plan**（批准计划）让 Claude 开始实施；**✏️ Keep planning**（继续规划），或回复卡片写修改意见，让它继续规划。
+
+<img src="images/claude-plan.gif" width="360" alt="Claude Code 计划卡片：点批准计划">
+
+</td>
+<td width="50%" valign="top">
+
+**发下一条指令。** 在对话的话题里打字。Claude 正忙时，可选 **📥 Queue**（排队，本轮结束后作为新一轮）或 **↪️ Steer**（引导，在下次工具调用后送达）。
+
+<img src="images/claude-reply.gif" width="360" alt="给运行中的 Claude Code 会话发消息并排队">
+
+</td>
+</tr>
+</table>
+
+### Codex Desktop
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**回合结果。** Codex 工作时有进度消息，结束后推送结果、耗时和套餐额度。**🕘 Last 3 turns**（最近3轮）就地显示最近的历史。
+
+<img src="images/codex-turn.gif" width="360" alt="Codex 进度消息、回合结果和最近三轮">
+
+</td>
+<td width="50%" valign="top">
+
+**审批命令。** 对运行命令或修改文件前需要审批的对话，可以在 Telegram 里允许、拒绝，或交还给电脑处理。
+
+<img src="images/codex-approval.gif" width="360" alt="Codex 命令审批卡片：点允许">
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**实施计划。** 计划模式的回合结束后，**🚀 Implement this plan**（实施此计划）在确认后让 Codex 切回默认模式并开始实施。直接回复这条消息，则让 Codex 修改计划。
+
+<img src="images/codex-plan.gif" width="360" alt="Codex 计划：点实施此计划并确认">
+
+</td>
+<td width="50%" valign="top">
+
+**通知。** 结果、卡片和提问都以普通 Telegram 通知送达，锁屏上就能看出哪个对话在等你。
+
+<img src="images/notifications.png" width="360" alt="手机锁屏上的桥通知">
+
+</td>
+</tr>
+</table>
+
+### 所有电脑在一个群里
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+在 General 里发 `/list`：每台电脑的 bot 列出本机最近的对话，运行中的排前，按钮可跳转到对应话题。
+
+<img src="images/list.png" width="360" alt="两台电脑回答 /list">
+
+</td>
+<td width="50%" valign="top">
+
+`/lang` 显示每台机器的语言，带 **English / 中文** 按钮；`/lang en` 或 `/lang zh` 一次切换所有机器。
+
+<img src="images/lang.png" width="360" alt="两台电脑回答 /lang">
+
+</td>
+</tr>
+</table>
 
 ## 能做什么、不能做什么
 
@@ -20,7 +124,7 @@
 | 每轮结束推送 | 读取本地 rollout | 通过 hooks | 只读 | 只读 | 只读 |
 | 发消息 | 通过 app-tools 管道，不切换当前显示的对话 | 运行中：会话收件箱（空闲时开始新一轮，忙时在工具调用之间送达）；已关闭：后台 `claude -p --resume`，需要 CLI 登录 | 不支持 | 不支持 | 不支持 |
 | 中断 `/stop` | 无远程接口，请在电脑上停 | 下次工具调用时停下；已运行的命令先跑完 | 不支持 | 不支持 | 不支持 |
-| 审批权限 | 只提醒 | 非 bypass 会话支持允许、拒绝、全部允许、交给电脑 | 不支持 | 不支持 | 不支持 |
+| 审批权限 | 命令和文件审批：允许、拒绝、交给电脑（审批策略不是 `never` 的对话）；其他请求只提醒 | 非 bypass 会话支持允许、拒绝、全部允许、交给电脑处理 | 不支持 | 不支持 | 不支持 |
 | 新建 `/new` | 在 Codex Desktop 新建任务 | 后台 `claude -p`，目录限配置的 `roots`，需要 CLI 登录 | 不支持 | 不支持 | 不支持 |
 | `/list`、`/read`、`/full`、`/status` | 支持 | 支持 | 支持 | 支持 | 支持 |
 
@@ -77,10 +181,11 @@ powershell -ExecutionPolicy Bypass -File .\install_task.ps1 -Action Install
 - `/list [n]`：各电脑最近 n 个会话，默认 10、最多 30，运行中的排前；前十个有话题跳转按钮。
 - `/status`：桥状态。`/help`：帮助。
 - `/lang`：显示各机器语言，提供 **English / 中文** 按钮。`/lang en` 或 `/lang zh`（即 `/lang en|zh`）切换群内所有机器。
-- 在会话话题打字后确认。正在运行时，**排队** 在本轮后开始新一轮：Claude 用自身队列；Codex 由桥最长等四小时，不会出现在 Codex 自身队列里。**引导** 插入本轮：Codex 接着处理；Claude 下次工具调用后看到，视作另一会话发来的消息，通常先做完手头动作。
-- 提问卡片可点选项或回复自己的答案，再点 **发送答案**。Claude 计划卡片可 **批准计划** / **继续规划**，回复卡片可附修改意见。Codex 计划完成后有 **实施此计划** 按钮。
-- 话题里：`/stop` 中断 Claude；`/read [k]` 看最近 k 轮；`/full` 下载最新回复全文；`/mute` / `/unmute` 切换推送；`/ask` 恢复逐条审批。
-- Claude 权限卡片和电脑对话框同时可用，先回答者生效。**允许** 仅本次；**拒绝**；**交给电脑处理** 关闭卡片，转到本机决定。**全部允许（本会话）** 需二次确认，12 小时失效。`/ask`、**恢复逐条审批**、`/lock`、重启均可取消；每轮推送报告自动允许次数。
+- 在会话话题打字后确认。会话空闲时卡片是 **✅ 发送** / **✖ 取消**。正在运行时，**📥 排队** 在本轮后开始新一轮：Claude 用自身队列；Codex 由桥最长等四小时，不会出现在 Codex 自身队列里。**↪️ 引导** 插入本轮：Codex 接着处理；Claude 下次工具调用后看到，视作另一会话发来的消息，通常先做完手头动作。
+- 提问卡片（Claude 和 Codex）可点选项或回复自己的答案，再点 **📨 发送答案**。Claude 计划卡片可 **✅ 批准计划** / **✏️ 继续规划**，回复卡片可附修改意见。Codex 计划完成后有 **🚀 实施此计划** 按钮。
+- 话题里：`/stop` 中断 Claude；`/read [k]` 看最近 k 轮；`/full` 发送最新回复全文（较长时为 `.md` 文件）；`/mute` / `/unmute` 切换推送；`/ask` 恢复逐条审批。
+- Claude 权限卡片和电脑对话框同时可用，先回答者生效。**✅ 允许** 仅本次；**⛔ 拒绝**；**💻 交给电脑处理** 关闭卡片，转到本机决定。**⚡ 全部允许（本会话）** 需二次确认，12 小时失效。`/ask`、**🔒 恢复逐条审批**、`/lock`、重启均可取消；每轮推送报告自动允许次数。
+- Codex 命令和文件审批卡片有 **✅ 允许**、**⛔ 拒绝**、**💻 交给电脑**，只在审批策略不是 `never` 的对话里出现。
 - 在电脑前卡片静音，离开后再响一次；本机处理后标记为已在电脑处理。最多等六小时。你在电脑前时，子代理请求直接交给电脑；这类对话框要等桥响应后才出现。
 - `/new@你的bot`：按引导新建 Codex/Claude 会话。General 里直接发 `/new`，每台机器提供选择按钮。
 - `/lock`：锁定所有机器写操作。`/unlock@你的bot`：确认后解锁该机器。
@@ -196,6 +301,8 @@ uv run pytest
 ```
 
 默认排除连接真实应用的 live 测试。
+
+`images/` 里的图片可在介绍本项目时按下方许可证使用。
 
 ## 许可证
 

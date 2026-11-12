@@ -1,17 +1,121 @@
-# agent-telegram: Codex / Claude Code conversations in Telegram
+# agent-telegram: Codex and Claude Code in your pocket
 
 **English** | [中文](README_zh.md)
 
-Version: 0.1.0 (2026-11-12)
+Version: 0.1.0 (2026-11-13)
 
-Run a background bridge on Windows to push every completed turn from Codex Desktop and Claude Code (the desktop app's Code tab or the terminal CLI) to a private Telegram group. From your phone, send instructions, interrupt Claude, handle permissions, and create conversations.
+![agent-telegram: a Claude Code permission card, a Codex turn result and a question card in Telegram](images/hero.png)
 
-- Each conversation has its own topic, such as `pc1·Codex·Paper review`.
-- Completed turns show status (✅/❌/⏹), elapsed time, and about 1,500 characters of the redacted final answer. **Full text** downloads a complete `.md` file; **Last 3 turns** shows history. Notifications are silent while the computer is unlocked and you have used its keyboard or mouse within three minutes.
-- During a turn, the agent's messages to you appear in a progress message, updated at most every 30 seconds. A direct request for attention (an action, question, or plan approval), or ten minutes of progress, starts a new message. Attention requests make a sound when you are away. Private reasoning is never pushed.
-- Text sent in a conversation topic becomes a proposed message. The bot repeats the recipient and text; it sends only after you tap **Send**.
-- Use one computer or several: give each its own bot and add them to the same group. Each bot answers `/list` and similar commands for its computer. Set `expected_bots` for more than two computers.
-- Standalone defaults: **English UI**; optional **Antigravity, Pi, and DSH readers off**.
+agent-telegram runs in the background on your Windows computer and connects Codex Desktop and Claude Code (the desktop app's Code tab or the terminal CLI) to a private Telegram group. Every finished turn shows up on your phone. From there you can answer Claude's permission prompts, questions and plans, approve Codex commands, send the next instruction or interrupt a turn, without walking back to your desk.
+
+- **One topic per conversation**, named `machine·Agent·title`, such as `laptop·Claude·Refactor upload client`.
+- **Every finished turn**: status (✅/❌/⏹), elapsed time, about 1,500 characters of the redacted final answer and the remaining plan quota. **📄 Full text** gets the whole answer; **🕘 Last 3 turns** shows recent history.
+- **Progress while you wait**: what the agent says to you during a turn appears in one progress message, updated at most every 30 seconds. Private reasoning is never pushed.
+- **Approvals, questions and plans** arrive as cards with buttons. The card and the dialog on your computer race; whichever answers first wins.
+- **Reply from your phone**: text typed in a topic becomes a proposed message. The bot repeats the recipient and text and sends only after you confirm.
+- **Quiet while you are at your desk**: pushes are silent while the computer is unlocked and its keyboard or mouse was used within three minutes. Requests for your attention make a sound once you are away.
+- **Several computers, one group**: each computer has its own bot, and `/list`, `/status` and `/lang` are answered by every one of them.
+- **English or Chinese** interface, switchable from Telegram with `/lang`.
+- Optional, view-only readers for Antigravity, Pi and DSH (DeepSeek Harness), **off by default**.
+
+## See it in action
+
+These screenshots come from the bridge itself: demo Claude Code and Codex sessions were run through the real bridge code, and every message, button, edit and notice is exactly what it sends. Only the session titles, commands and answers are made up.
+
+### Claude Code
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Approve tool calls.** A permission request becomes a card with the tool, directory, mode and full input. **✅ Allow** permits once, **⛔ Deny** refuses, **💻 Handle on the PC** leaves it to the dialog on your computer, and **⚡ Allow all (this session)** asks for a second tap.
+
+<img src="images/claude-permission.gif" width="360" alt="Claude Code permission card: tapping Allow">
+
+</td>
+<td width="50%" valign="top">
+
+**Answer questions.** When Claude asks you something, pick an option or reply to the card with your own answer, check the summary, then tap **📨 Send answers**.
+
+<img src="images/claude-question.gif" width="360" alt="Claude Code question card: choosing an option and sending the answer">
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**Approve plans.** A plan waiting for approval arrives in full. **✅ Approve plan** lets Claude start; **✏️ Keep planning**, or a reply with your changes, sends it back.
+
+<img src="images/claude-plan.gif" width="360" alt="Claude Code plan card: tapping Approve plan">
+
+</td>
+<td width="50%" valign="top">
+
+**Send the next instruction.** Type in the conversation's topic. While Claude is busy, choose **📥 Queue** (a new turn after this one) or **↪️ Steer** (delivered after the next tool call).
+
+<img src="images/claude-reply.gif" width="360" alt="Sending a message to a running Claude Code session and queueing it">
+
+</td>
+</tr>
+</table>
+
+### Codex Desktop
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Turn results.** A progress message while Codex works, then the result with elapsed time and plan quota. **🕘 Last 3 turns** shows the recent history in place.
+
+<img src="images/codex-turn.gif" width="360" alt="Codex progress message, finished turn and the last three turns">
+
+</td>
+<td width="50%" valign="top">
+
+**Approve commands.** In conversations that ask before running commands or changing files, allow or deny from Telegram, or hand the request back to the PC.
+
+<img src="images/codex-approval.gif" width="360" alt="Codex command approval card: tapping Allow">
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**Implement a plan.** When a plan-mode turn finishes, **🚀 Implement this plan** switches Codex back to default mode and starts the work, after a confirmation. Reply to the message instead to have Codex revise the plan.
+
+<img src="images/codex-plan.gif" width="360" alt="Codex plan: tapping Implement this plan and confirming">
+
+</td>
+<td width="50%" valign="top">
+
+**Notifications.** Results, cards and questions arrive as ordinary Telegram notifications, so the lock screen already tells you which conversation needs you.
+
+<img src="images/notifications.png" width="360" alt="Phone lock screen with notifications from the bridge">
+
+</td>
+</tr>
+</table>
+
+### All your computers in one group
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+`/list` in General: every computer's bot lists its recent conversations, running ones first, with buttons that jump to each topic.
+
+<img src="images/list.png" width="360" alt="/list answered by two computers">
+
+</td>
+<td width="50%" valign="top">
+
+`/lang` shows each machine's language with **English / 中文** buttons; `/lang en` or `/lang zh` switches every machine at once.
+
+<img src="images/lang.png" width="360" alt="/lang answered by two computers">
+
+</td>
+</tr>
+</table>
 
 ## Capabilities and limits
 
@@ -20,7 +124,7 @@ Run a background bridge on Windows to push every completed turn from Codex Deskt
 | Completed-turn notifications | Local rollouts | Hooks | View only | View only | View only |
 | Send messages | App-tools pipe, without switching the displayed conversation | Running: session inbox (idle starts a turn; busy receives between tool calls). Closed: background `claude -p --resume`, requiring CLI login | No | No | No |
 | Interrupt `/stop` | No remote interface; stop on the computer | Next tool call; an already running command finishes first | No | No | No |
-| Permission approval | Notifications only | Allow / Deny / Allow all / Handle on computer for non-bypass sessions | No | No | No |
+| Permission approval | Command and file approvals: Allow / Deny / Hand over to PC (conversations whose approval policy is not `never`); other requests are alerts only | Allow / Deny / Allow all / Handle on the PC for non-bypass sessions | No | No | No |
 | Create `/new` | A task in Codex Desktop | Background `claude -p`, within configured `roots`; requires CLI login | No | No | No |
 | `/list`, `/read`, `/full`, `/status` | Yes | Yes | Yes | Yes | Yes |
 
@@ -77,11 +181,12 @@ Send `/list` in the group; each computer's bot should respond. To create Claude 
 - `/list [n]`: recent conversations on each computer; default 10, maximum 30, running first. The first ten have topic navigation buttons.
 - `/status`: bridge status. `/help`: help.
 - `/lang`: each machine's language with **English / 中文** buttons. `/lang en` or `/lang zh` (the `/lang en|zh` choices) switches every machine in the group.
-- Type in a conversation topic, then confirm. While a turn runs, **Queue** starts a new turn after it: Claude uses its own queue; the bridge waits up to four hours for Codex, and the item is absent from Codex's own queue. **Steer** inserts into this turn: Codex continues with it; Claude sees it after the next tool call as another session's message and usually finishes the current action first.
-- Question cards let you select an option or reply with your answer, then tap **Send answer**. Claude plan cards offer **Approve plan** / **Continue planning**; reply to attach changes. A completed Codex plan offers **Implement this plan**.
-- In a topic: `/stop` interrupts Claude; `/read [k]` reads the last k turns; `/full` downloads the latest full answer; `/mute` / `/unmute` toggle pushes; `/ask` restores per-request permission approval.
-- Claude permission cards coexist with the computer's dialog; the first answer wins. **Allow** permits once; **Deny** refuses; **Handle on computer** closes the card for a local decision. **Allow all (this session)** needs a second confirmation and expires after 12 hours. `/ask`, **Restore per-request approval**, `/lock`, or restart clears it. Turn pushes report the automatic approval count.
-- Cards are silent while you are present, and alert again when you leave. Local answers mark cards handled on the computer. Cards wait up to six hours. Subagent requests go directly to the computer while you are present; those dialogs appear after the bridge responds.
+- Type in a conversation topic, then confirm. An idle session gets **✅ Send** / **✖ Cancel**. While a turn runs, **📥 Queue** starts a new turn after it: Claude uses its own queue; the bridge waits up to four hours for Codex, and the item is absent from Codex's own queue. **↪️ Steer** inserts into this turn: Codex continues with it; Claude sees it after the next tool call as another session's message and usually finishes the current action first.
+- Question cards (Claude and Codex) let you select an option or reply with your answer, then tap **📨 Send answers**. Claude plan cards offer **✅ Approve plan** / **✏️ Keep planning**; reply to attach changes. A completed Codex plan offers **🚀 Implement this plan**.
+- In a topic: `/stop` interrupts Claude; `/read [k]` reads the last k turns; `/full` sends the latest full answer (as a `.md` file when long); `/mute` / `/unmute` toggle pushes; `/ask` restores per-request permission approval.
+- Claude permission cards coexist with the computer's dialog; the first answer wins. **✅ Allow** permits once; **⛔ Deny** refuses; **💻 Handle on the PC** closes the card for a local decision. **⚡ Allow all (this session)** needs a second confirmation and expires after 12 hours. `/ask`, **🔒 Restore individual approvals**, `/lock`, or restart clears it. Turn pushes report the automatic approval count.
+- Codex command and file approval cards offer **✅ Allow**, **⛔ Deny** and **💻 Hand over to PC**. They appear only for conversations whose approval policy is not `never`.
+- Cards are silent while you are present, and alert again when you leave. Local answers mark cards handled on the PC. Cards wait up to six hours. Subagent requests go directly to the computer while you are present; those dialogs appear after the bridge responds.
 - `/new@yourbot`: guided Codex/Claude creation. Plain `/new` in General makes each machine offer a selection button.
 - `/lock`: lock writes on all machines. `/unlock@yourbot`: unlock that machine after confirmation.
 
@@ -196,6 +301,8 @@ uv run pytest
 ```
 
 Live tests are excluded by default.
+
+The images in `images/` may be reused when writing about the project, under the license below.
 
 ## License
 
