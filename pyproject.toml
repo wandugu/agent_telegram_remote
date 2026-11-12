@@ -1,0 +1,40 @@
+[project]
+name = "agent-telegram"
+version = "0.1.0"
+description = "Telegram bridge for local Codex Desktop and Claude Code conversations (Windows)"
+readme = "README.md"
+license = "CC-BY-4.0"
+license-files = ["LICENSE"]
+authors = [{ name = "wandugu" }]
+keywords = ["telegram", "codex", "claude-code", "windows", "remote-control"]
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.28,<1",
+    "zstandard>=0.23,<1",
+    "pywin32>=306; sys_platform == 'win32'",
+]
+
+[project.urls]
+Homepage = "https://github.com/wandugu/agent_telegram_remote"
+Repository = "https://github.com/wandugu/agent_telegram_remote"
+Issues = "https://github.com/wandugu/agent_telegram_remote/issues"
+
+[project.scripts]
+agent-telegram = "agent_telegram.tgbridge.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+    "live: talks to a running Codex Desktop; opt in with -m live",
+]
+addopts = "-m 'not live'"
+
+[build-system]
+requires = ["uv_build>=0.9.28,<0.13"]
+build-backend = "uv_build"
