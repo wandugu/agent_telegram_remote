@@ -4,7 +4,7 @@
 
 版本：0.1.0 (2026-11-13)
 
-![agent-telegram：Telegram 里的 Claude Code 权限卡片、Codex 回合结果和提问卡片](images/hero.png)
+![agent-telegram：Telegram 里的 Claude Code 权限卡片、Codex 回合结果和提问卡片](images/zh/hero.png)
 
 agent-telegram 在 Windows 电脑上后台运行，把 Codex Desktop 和 Claude Code（桌面 App 的 Code 标签或终端 CLI）接到一个私密 Telegram 群。每一轮的结果都会推到手机上。你可以在手机上回答 Claude 的权限请求、提问和计划，审批 Codex 的命令，发下一条指令，或者中断当前回合，不用回到电脑前。
 
@@ -20,98 +20,63 @@ agent-telegram 在 Windows 电脑上后台运行，把 Codex Desktop 和 Claude 
 
 ## 效果演示
 
-下面的截图都来自桥本身：用演示用的 Claude Code 和 Codex 会话驱动真实的桥代码，每条消息、按钮、编辑和提示都和它实际发出的完全一致，只有会话标题、命令和回答是虚构的。截图使用英文界面；切换到中文后，按钮和提示会显示为括号里的中文。
+每段动图从两边展示同一次交互：左边是电脑，右边是 Telegram 群。Telegram 这一边是桥自己的输出：用演示用的 Claude Code 和 Codex 会话驱动真实的桥代码，bot 设为中文，每条消息、按钮、编辑和提示都和它实际发出的完全一致。电脑这一边是终端里的 Claude Code 和 Codex Desktop 窗口的示意图，和桥的动作同步。会话标题、命令和回答都是虚构的。[英文 README](README.md) 里是同样的流程，bot 用英文界面。
 
 ### Claude Code
 
-<table>
-<tr>
-<td width="50%" valign="top">
+**审批工具调用。** 权限请求变成一张卡片，列出工具、目录、模式和完整输入；电脑上照常弹出对话框，先回答的生效。**✅ 允许** 仅允许本次，**⛔ 拒绝** 拒绝，**💻 交给电脑处理** 转回电脑上的对话框，**⚡ 全部允许（本会话）** 需要再点一次确认。
 
-**审批工具调用。** 权限请求变成一张卡片，列出工具、目录、模式和完整输入。**✅ Allow**（允许）仅允许本次，**⛔ Deny**（拒绝）拒绝，**💻 Handle on the PC**（交给电脑处理）转回电脑上的对话框，**⚡ Allow all (this session)**（全部允许（本会话））需要再点一次确认。
+![Claude Code 请求运行命令；在 Telegram 里点允许后，电脑上的对话框关闭，命令开始运行](images/zh/claude-permission.gif)
 
-<img src="images/claude-permission.gif" width="360" alt="Claude Code 权限卡片：点允许">
+**回答提问。** Claude 向你提问时，卡片上是同样的选项。点一个选项，或回复卡片写自己的答案，核对汇总后点 **📨 发送答案**。电脑上的 Claude 收到回答后继续工作。
 
-</td>
-<td width="50%" valign="top">
+![Claude Code 提问；在 Telegram 里选好选项并点发送答案，电脑上的提问随即得到回答](images/zh/claude-question.gif)
 
-**回答提问。** Claude 向你提问时，点选项或回复卡片写自己的答案，核对汇总后点 **📨 Send answers**（发送答案）。
+**批准计划。** 等待批准的计划完整送达。**✅ 批准计划** 让 Claude 退出计划模式开始实施；**✏️ 继续规划**，或回复卡片写修改意见，让它继续规划。
 
-<img src="images/claude-question.gif" width="360" alt="Claude Code 提问卡片：选择选项并发送答案">
+![Claude Code 的计划等待批准；在 Telegram 里点批准计划，电脑上开始修改](images/zh/claude-plan.gif)
 
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
+**发下一条指令。** 在对话的话题里打字。Claude 正忙时，可选 **📥 排队：本轮结束后发**（走 Claude 自己的队列，本轮结束后作为新一轮）或 **↪️ 引导：插进这一轮**（在下次工具调用后送达）。
 
-**批准计划。** 等待批准的计划完整送达。**✅ Approve plan**（批准计划）让 Claude 开始实施；**✏️ Keep planning**（继续规划），或回复卡片写修改意见，让它继续规划。
-
-<img src="images/claude-plan.gif" width="360" alt="Claude Code 计划卡片：点批准计划">
-
-</td>
-<td width="50%" valign="top">
-
-**发下一条指令。** 在对话的话题里打字。Claude 正忙时，可选 **📥 Queue**（排队，本轮结束后作为新一轮）或 **↪️ Steer**（引导，在下次工具调用后送达）。
-
-<img src="images/claude-reply.gif" width="360" alt="给运行中的 Claude Code 会话发消息并排队">
-
-</td>
-</tr>
-</table>
+![在 Telegram 里输入的消息排进运行中的 Claude Code 会话的队列，这一轮结束后开始处理](images/zh/claude-reply.gif)
 
 ### Codex Desktop
 
-<table>
-<tr>
-<td width="50%" valign="top">
+**回合结果。** Codex 工作时有进度消息，结束后推送结果、耗时和套餐额度。**🕘 最近3轮** 就地显示最近的历史。
 
-**回合结果。** Codex 工作时有进度消息，结束后推送结果、耗时和套餐额度。**🕘 Last 3 turns**（最近3轮）就地显示最近的历史。
-
-<img src="images/codex-turn.gif" width="360" alt="Codex 进度消息、回合结果和最近三轮">
-
-</td>
-<td width="50%" valign="top">
+![Codex Desktop 完成一轮；进度、结果和最近三轮出现在 Telegram 里](images/zh/codex-turn.gif)
 
 **审批命令。** 对运行命令或修改文件前需要审批的对话，可以在 Telegram 里允许、拒绝，或交还给电脑处理。
 
-<img src="images/codex-approval.gif" width="360" alt="Codex 命令审批卡片：点允许">
+![Codex 请求运行命令；在 Telegram 里点允许，电脑上的审批随即通过](images/zh/codex-approval.gif)
 
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
+**实施计划。** 计划模式的回合结束后，**🚀 实施此计划** 在确认后让 Codex 切回默认模式并开始实施。直接回复这条消息，则让 Codex 修改计划。
 
-**实施计划。** 计划模式的回合结束后，**🚀 Implement this plan**（实施此计划）在确认后让 Codex 切回默认模式并开始实施。直接回复这条消息，则让 Codex 修改计划。
+![Codex 完成计划；在 Telegram 里点实施此计划并确认，电脑上开始实施](images/zh/codex-plan.gif)
 
-<img src="images/codex-plan.gif" width="360" alt="Codex 计划：点实施此计划并确认">
-
-</td>
-<td width="50%" valign="top">
-
-**通知。** 结果、卡片和提问都以普通 Telegram 通知送达，锁屏上就能看出哪个对话在等你。
-
-<img src="images/notifications.png" width="360" alt="手机锁屏上的桥通知">
-
-</td>
-</tr>
-</table>
-
-### 所有电脑在一个群里
+### 手机上
 
 <table>
 <tr>
-<td width="50%" valign="top">
+<td width="33%" valign="top">
 
-在 General 里发 `/list`：每台电脑的 bot 列出本机最近的对话，运行中的排前，按钮可跳转到对应话题。
+**通知。** 结果、卡片和提问都以普通 Telegram 通知送达，锁屏上就能看出哪个对话在等你。
 
-<img src="images/list.png" width="360" alt="两台电脑回答 /list">
+<img src="images/zh/notifications.png" width="260" alt="手机锁屏上的桥通知">
 
 </td>
-<td width="50%" valign="top">
+<td width="33%" valign="top">
 
-`/lang` 显示每台机器的语言，带 **English / 中文** 按钮；`/lang en` 或 `/lang zh` 一次切换所有机器。
+**所有电脑。** 在 General 里发 `/list`：每台电脑的 bot 列出本机最近的对话，运行中的排前，按钮可跳转到对应话题。
 
-<img src="images/lang.png" width="360" alt="两台电脑回答 /lang">
+<img src="images/zh/list.png" width="260" alt="两台电脑回答 /list">
+
+</td>
+<td width="33%" valign="top">
+
+**语言。** `/lang` 显示每台机器的语言，带 **English / 中文** 按钮；`/lang en` 或 `/lang zh` 一次切换所有机器。
+
+<img src="images/zh/lang.png" width="260" alt="两台电脑回答 /lang">
 
 </td>
 </tr>
@@ -302,7 +267,7 @@ uv run pytest
 
 默认排除连接真实应用的 live 测试。
 
-`images/` 里的图片可在介绍本项目时按下方许可证使用。
+`images/`（英文）和 `images/zh/`（中文）里的图片可在介绍本项目时按下方许可证使用。
 
 ## 许可证
 

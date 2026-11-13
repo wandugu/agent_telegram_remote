@@ -20,98 +20,63 @@ agent-telegram runs in the background on your Windows computer and connects Code
 
 ## See it in action
 
-These screenshots come from the bridge itself: demo Claude Code and Codex sessions were run through the real bridge code, and every message, button, edit and notice is exactly what it sends. Only the session titles, commands and answers are made up.
+Each animation shows one interaction from both sides: the computer on the left, the Telegram group on the right. The Telegram side is the bridge's own output. Demo Claude Code and Codex sessions were run through the real bridge code, so every message, button, edit and notice is exactly what it sends. The computer side is a mock-up of Claude Code in a terminal and of the Codex Desktop window, kept in step with the bridge. Session titles, commands and answers are made up. The [Chinese README](README_zh.md) shows the same flows with the bot set to Chinese.
 
 ### Claude Code
 
-<table>
-<tr>
-<td width="50%" valign="top">
+**Approve tool calls.** A permission request becomes a card with the tool, directory, mode and full input, while the usual dialog stays open on the computer; whichever answers first wins. **✅ Allow** permits once, **⛔ Deny** refuses, **💻 Handle on the PC** leaves it to the dialog on your computer, and **⚡ Allow all (this session)** asks for a second tap.
 
-**Approve tool calls.** A permission request becomes a card with the tool, directory, mode and full input. **✅ Allow** permits once, **⛔ Deny** refuses, **💻 Handle on the PC** leaves it to the dialog on your computer, and **⚡ Allow all (this session)** asks for a second tap.
+![Claude Code asks to run a command; tapping Allow in Telegram closes the dialog on the computer and the command runs](images/claude-permission.gif)
 
-<img src="images/claude-permission.gif" width="360" alt="Claude Code permission card: tapping Allow">
+**Answer questions.** When Claude asks you something, the same options appear on the card. Pick one or reply to the card with your own answer, check the summary, then tap **📨 Send answers**. Claude gets the answer on the computer and carries on.
 
-</td>
-<td width="50%" valign="top">
+![Claude Code asks a question; choosing an option in Telegram and tapping Send answers answers it on the computer](images/claude-question.gif)
 
-**Answer questions.** When Claude asks you something, pick an option or reply to the card with your own answer, check the summary, then tap **📨 Send answers**.
+**Approve plans.** A plan waiting for approval arrives in full. **✅ Approve plan** lets Claude leave plan mode and start; **✏️ Keep planning**, or a reply with your changes, sends it back.
 
-<img src="images/claude-question.gif" width="360" alt="Claude Code question card: choosing an option and sending the answer">
+![Claude Code's plan waits for approval; tapping Approve plan in Telegram starts the work on the computer](images/claude-plan.gif)
 
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
+**Send the next instruction.** Type in the conversation's topic. While Claude is busy, choose **📥 Queue** (a new turn after this one, through Claude's own queue) or **↪️ Steer** (delivered after the next tool call).
 
-**Approve plans.** A plan waiting for approval arrives in full. **✅ Approve plan** lets Claude start; **✏️ Keep planning**, or a reply with your changes, sends it back.
-
-<img src="images/claude-plan.gif" width="360" alt="Claude Code plan card: tapping Approve plan">
-
-</td>
-<td width="50%" valign="top">
-
-**Send the next instruction.** Type in the conversation's topic. While Claude is busy, choose **📥 Queue** (a new turn after this one) or **↪️ Steer** (delivered after the next tool call).
-
-<img src="images/claude-reply.gif" width="360" alt="Sending a message to a running Claude Code session and queueing it">
-
-</td>
-</tr>
-</table>
+![A message typed in Telegram is queued for the running Claude Code session and starts when the turn ends](images/claude-reply.gif)
 
 ### Codex Desktop
 
-<table>
-<tr>
-<td width="50%" valign="top">
-
 **Turn results.** A progress message while Codex works, then the result with elapsed time and plan quota. **🕘 Last 3 turns** shows the recent history in place.
 
-<img src="images/codex-turn.gif" width="360" alt="Codex progress message, finished turn and the last three turns">
-
-</td>
-<td width="50%" valign="top">
+![Codex Desktop finishes a turn; the progress, the result and the last three turns appear in Telegram](images/codex-turn.gif)
 
 **Approve commands.** In conversations that ask before running commands or changing files, allow or deny from Telegram, or hand the request back to the PC.
 
-<img src="images/codex-approval.gif" width="360" alt="Codex command approval card: tapping Allow">
-
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
+![Codex asks to run a command; tapping Allow in Telegram approves it on the computer](images/codex-approval.gif)
 
 **Implement a plan.** When a plan-mode turn finishes, **🚀 Implement this plan** switches Codex back to default mode and starts the work, after a confirmation. Reply to the message instead to have Codex revise the plan.
 
-<img src="images/codex-plan.gif" width="360" alt="Codex plan: tapping Implement this plan and confirming">
+![Codex finishes a plan; tapping Implement this plan and Confirm in Telegram starts the implementation on the computer](images/codex-plan.gif)
 
-</td>
-<td width="50%" valign="top">
-
-**Notifications.** Results, cards and questions arrive as ordinary Telegram notifications, so the lock screen already tells you which conversation needs you.
-
-<img src="images/notifications.png" width="360" alt="Phone lock screen with notifications from the bridge">
-
-</td>
-</tr>
-</table>
-
-### All your computers in one group
+### On the phone
 
 <table>
 <tr>
-<td width="50%" valign="top">
+<td width="33%" valign="top">
 
-`/list` in General: every computer's bot lists its recent conversations, running ones first, with buttons that jump to each topic.
+**Notifications.** Results, cards and questions arrive as ordinary Telegram notifications, so the lock screen already tells you which conversation needs you.
 
-<img src="images/list.png" width="360" alt="/list answered by two computers">
+<img src="images/notifications.png" width="260" alt="Phone lock screen with notifications from the bridge">
 
 </td>
-<td width="50%" valign="top">
+<td width="33%" valign="top">
 
-`/lang` shows each machine's language with **English / 中文** buttons; `/lang en` or `/lang zh` switches every machine at once.
+**All your computers.** `/list` in General: every computer's bot lists its recent conversations, running ones first, with buttons that jump to each topic.
 
-<img src="images/lang.png" width="360" alt="/lang answered by two computers">
+<img src="images/list.png" width="260" alt="/list answered by two computers">
+
+</td>
+<td width="33%" valign="top">
+
+**Language.** `/lang` shows each machine's language with **English / 中文** buttons; `/lang en` or `/lang zh` switches every machine at once.
+
+<img src="images/lang.png" width="260" alt="/lang answered by two computers">
 
 </td>
 </tr>
@@ -302,7 +267,7 @@ uv run pytest
 
 Live tests are excluded by default.
 
-The images in `images/` may be reused when writing about the project, under the license below.
+The images in `images/` (English) and `images/zh/` (Chinese) may be reused when writing about the project, under the license below.
 
 ## License
 
