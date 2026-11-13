@@ -1,6 +1,8 @@
-# agent-telegram：把 Codex 和 Claude Code 装进口袋
+# Agent 远程消息接收工具
 
 [English](README.md) | **中文**
+
+**agent-telegram** · 像接收微信一样接收 Claude 的通知
 
 版本：0.1.0 (2026-11-13)
 

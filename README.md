@@ -1,6 +1,8 @@
-# agent-telegram: Codex and Claude Code in your pocket
+# Remote messages from your coding agents
 
 **English** | [中文](README_zh.md)
+
+**agent-telegram** · Get Claude's notifications like any Telegram message.
 
 Version: 0.1.0 (2026-11-13)
 
